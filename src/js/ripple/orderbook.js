@@ -17,7 +17,7 @@ var Amount       = require('./amount').Amount;
 var UInt160      = require('./uint160').UInt160;
 var Currency     = require('./currency').Currency;
 var log          = require('./log').internal.sub('orderbook');
-
+this._shouldSubscribe
 /**
  * @constructor OrderBook
  * @param {Remote} remote
@@ -84,7 +84,7 @@ function OrderBook(remote, getsC, getsI, paysC, paysI, key) {
   });
 
   this._remote.on('prepare_subscribe', function() {
-    self.subscribe();
+    // self.subscribe(); XXX: `subscribe()` will be called twice.
   });
 
   this._remote.on('disconnect', function() {
@@ -149,6 +149,7 @@ OrderBook.prototype.subscribe = function() {
   if (!this._shouldSubscribe) {
     return;
   }
+  this._shouldSubscribe = false
 
   if (this._remote.trace) {
     log.info('subscribing', this._key);
